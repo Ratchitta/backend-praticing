@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HelloModule } from './modules/hello/hello.module';
 import { UserModule } from './modules/user/user.module';
+import { User } from './modules/user/entities/user.entity';
 
 @Module({
   imports: [
@@ -15,7 +16,6 @@ import { UserModule } from './modules/user/user.module';
       entities: [User],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([User]),
     UserModule,
     HelloModule,
   ],
