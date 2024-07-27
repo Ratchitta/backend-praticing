@@ -7,10 +7,10 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
-import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
 import { TransformInterceptor } from 'src/common/interceptors/response.interceptor';
 import { ResponseMessage } from 'src/common/decorators/response_message.decorator';
+import { UserDto } from '../user.dto';
 
 @Controller('users')
 @UseInterceptors(TransformInterceptor)
@@ -19,25 +19,25 @@ export class UserController {
 
   @Get()
   @ResponseMessage('Get all users successfully')
-  findAll(): Promise<User[]> {
+  findAll(): Promise<UserDto[]> {
     return this.userService.findAll();
   }
 
   @Get(':id')
   @ResponseMessage('Get user by id successfully')
-  findOne(@Param('id') id: string): Promise<User> {
-    return this.userService.findOne(id);
+  findOne(@Param('id') id: number): Promise<UserDto> {
+    return this.userService.findById(id);
   }
 
   @Post()
   @ResponseMessage('Create user successfully')
-  create(@Body() user: User): Promise<User> {
+  create(@Body() user: UserDto): Promise<UserDto> {
     return this.userService.create(user);
   }
 
   @Delete(':id')
   @ResponseMessage('Delete user by id successfully')
-  remove(@Param('id') id: string): Promise<void> {
+  remove(@Param('id') id: number): Promise<void> {
     return this.userService.remove(id);
   }
 }
