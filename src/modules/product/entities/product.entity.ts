@@ -23,6 +23,6 @@ export class Product {
   @Column({ name: 'updated_at' })
   updatedAt: Date;
 
-  @Column({ name: 'deleted_at' })
-  deletedAt: Date;
+  @Column({ name: 'deleted_at', nullable: true })
+  deletedAt: Date | null;
 }

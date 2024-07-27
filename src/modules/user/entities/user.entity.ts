@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   name: string;
@@ -19,4 +19,13 @@ export class User {
 
   @Column({ nullable: true })
   phoneNumber: string;
+
+  @Column({ name: 'created_at' })
+  createdAt: Date;
+
+  @Column({ name: 'updated_at' })
+  updatedAt: Date;
+
+  @Column({ name: 'deleted_at', nullable: true })
+  deletedAt: Date | null;
 }

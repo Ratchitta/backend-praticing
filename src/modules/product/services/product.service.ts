@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNumber, IsString, Min } from 'class-validator';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
 
 class ProductWithoutId {
@@ -26,38 +26,49 @@ export class ProductService {
     private productRepository: Repository<Product>,
   ) {}
 
-  findAll(): Promise<Product[]> {
-    return this.productRepository.find({
-      order: {
-        id: 'ASC',
-      },
-    });
-  }
-
-  async findOne(id: number): Promise<Product> {
+  async findById(id: number): Promise<Product> {
     const result = await this.productRepository.findOne({
-      where: { id },
+      where: { id, deletedAt: IsNull() },
     });
+
     if (!result) {
-      throw new NotFoundException(
-        `[ProductService] findOne: Product with id ${id} not found`,
-      );
+      const errorMessage = `Product with id ${id} not found`;
+      console.error(`[ProductService] findOne: ${errorMessage}`);
+      throw new NotFoundException(errorMessage);
     }
     return result;
   }
 
+  findAll(): Promise<Product[]> {
+    return this.productRepository.find({
+      where: {
+        deletedAt: IsNull(),
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+  }
+
   async create(product: ProductWithoutId): Promise<Product> {
-    return await this.productRepository.save(product);
+    const dateNow = new Date();
+    return await this.productRepository.save({
+      ...product,
+      createdAt: dateNow,
+      updatedAt: dateNow,
+    });
   }
 
   async update(id: number, product: ProductWithoutId): Promise<Product> {
     await this.productRepository.update(id, product);
-    return await this.productRepository.findOne({
-      where: { id },
-    });
+    return await this.findById(id);
   }
 
   async remove(id: string): Promise<void> {
-    await this.productRepository.delete(id);
+    const product = await this.findById(Number(id));
+    await this.productRepository.update(id, {
+      ...product,
+      deletedAt: new Date(),
+    });
   }
 }

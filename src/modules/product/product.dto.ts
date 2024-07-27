@@ -1,4 +1,4 @@
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class ProductDto {
   @IsNumber()
@@ -22,6 +22,7 @@ export class ProductDto {
   @IsDate()
   updatedAt: Date;
 
+  @IsOptional()
   @IsDate()
-  deletedAt: Date;
+  deletedAt: Date | null;
 }

@@ -87,7 +87,7 @@ export class ProductController {
   @Get(':id')
   @ResponseMessage('Get product by id successfully')
   findOne(@Param('id') id: number): Promise<ProductDto> {
-    return this.productService.findOne(id);
+    return this.productService.findById(id);
   }
 
   @Post()
