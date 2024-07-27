@@ -1,7 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IsNumber, IsString, Min } from 'class-validator';
 import { Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
+
+class ProductWithoutId {
+  @IsString()
+  readonly name: string;
+
+  @IsString()
+  readonly description: string;
+
+  @IsNumber()
+  readonly price: number;
+
+  @IsNumber()
+  @Min(0)
+  readonly stock: number;
+}
 
 @Injectable()
 export class ProductService {
@@ -26,7 +42,7 @@ export class ProductService {
     return result;
   }
 
-  async create(product: Product): Promise<Product> {
+  async create(product: ProductWithoutId): Promise<Product> {
     return await this.productRepository.save(product);
   }
 

@@ -7,10 +7,48 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
-import { TransformInterceptor } from 'src/common/interceptors/response.interceptor';
-import { ProductService } from '../services/product.service';
+import { Type } from 'class-transformer';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 import { ResponseMessage } from 'src/common/decorators/response_message.decorator';
-import { Product } from '../entities/product.entity';
+import { TransformInterceptor } from 'src/common/interceptors/response.interceptor';
+import { ProductDto } from '../product.dto';
+import { ProductService } from '../services/product.service';
+
+class CreateProductDto {
+  @IsNotEmpty()
+  @IsString()
+  readonly name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly description: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  readonly price: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(0)
+  readonly stock: number;
+}
+
+class CreateProductsInput {
+  @IsArray()
+  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => CreateProductDto)
+  readonly products: CreateProductDto[];
+}
+
 
 @Controller('products')
 @UseInterceptors(TransformInterceptor)
@@ -19,24 +57,29 @@ export class ProductController {
 
   @Get()
   @ResponseMessage('Get all products successfully')
-  findAll(): Promise<Product[]> {
+  findAll(): Promise<ProductDto[]> {
     return this.productService.findAll();
   }
 
   @Get(':id')
   @ResponseMessage('Get product by id successfully')
-  findOne(@Param('id') id: number): Promise<Product> {
+  findOne(@Param('id') id: number): Promise<ProductDto> {
     return this.productService.findOne(id);
   }
 
   @Post()
-  @ResponseMessage('Create product successfully')
-  create(@Body() products: Product[]): Promise<Product>[] {
+  @ResponseMessage('Create products successfully')
+  create(
+    @Body()
+    input: CreateProductsInput,
+  ): Promise<ProductDto[]> {
+    const { products } = input;
+
     const results = products.map(async (product) => {
       return await this.productService.create(product);
     });
 
-    return results;
+    return Promise.all(results);
   }
 
   @Delete(':id')
