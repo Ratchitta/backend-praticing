@@ -11,13 +11,13 @@ export class User {
   @Column()
   email: string;
 
-  @Column({ default: 0 })
+  @Column()
   age: number;
 
-  @Column({ nullable: true })
+  @Column()
   address: string;
 
-  @Column({ nullable: true })
+  @Column()
   phoneNumber: string;
 
   @Column({ name: 'created_at' })
