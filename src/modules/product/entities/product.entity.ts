@@ -16,4 +16,13 @@ export class Product {
 
   @Column()
   stock: number;
+
+  @Column({ name: 'created_at' })
+  createdAt: Date;
+
+  @Column({ name: 'updated_at' })
+  updatedAt: Date;
+
+  @Column({ name: 'deleted_at' })
+  deletedAt: Date;
 }

@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsString } from 'class-validator';
 
 export class ProductDto {
   @IsNumber()
@@ -15,4 +15,13 @@ export class ProductDto {
 
   @IsNumber()
   stock: number;
+
+  @IsDate()
+  createdAt: Date;
+
+  @IsDate()
+  updatedAt: Date;
+
+  @IsDate()
+  deletedAt: Date;
 }
