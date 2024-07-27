@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   UseInterceptors,
 } from '@nestjs/common';
@@ -49,6 +50,28 @@ class CreateProductsInput {
   readonly products: CreateProductDto[];
 }
 
+class UpdateProductByIdInput {
+  @IsString()
+  readonly name: string;
+
+  @IsString()
+  readonly description: string;
+
+  @IsNumber()
+  readonly price: number;
+
+  @IsNumber()
+  @Min(0)
+  readonly stock: number;
+}
+
+class UpdateProductsInput {
+  @IsArray()
+  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => ProductDto)
+  readonly products: ProductDto[];
+}
 
 @Controller('products')
 @UseInterceptors(TransformInterceptor)
@@ -77,6 +100,27 @@ export class ProductController {
 
     const results = products.map(async (product) => {
       return await this.productService.create(product);
+    });
+
+    return Promise.all(results);
+  }
+
+  @Patch(':id')
+  @ResponseMessage('Update product by id successfully')
+  update(
+    @Param('id') id: number,
+    @Body() product: UpdateProductByIdInput,
+  ): Promise<ProductDto> {
+    return this.productService.update(id, product);
+  }
+
+  @Patch()
+  @ResponseMessage('Update products successfully')
+  updateAll(@Body() input: UpdateProductsInput): Promise<ProductDto[]> {
+    const { products } = input;
+
+    const results = products.map(async ({ id, ...product }) => {
+      return await this.productService.update(id, product);
     });
 
     return Promise.all(results);
