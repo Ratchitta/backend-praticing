@@ -40,6 +40,10 @@ class CreateProductDto {
   @IsNumber()
   @Min(0)
   readonly stock: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  readonly userId: number;
 }
 
 class CreateProductsInput {
@@ -51,6 +55,9 @@ class CreateProductsInput {
 }
 
 class UpdateProductByIdInput {
+  @IsNumber()
+  readonly id: number;
+
   @IsString()
   readonly name: string;
 
@@ -63,14 +70,17 @@ class UpdateProductByIdInput {
   @IsNumber()
   @Min(0)
   readonly stock: number;
+
+  @IsNumber()
+  readonly userId: number;
 }
 
 class UpdateProductsInput {
   @IsArray()
   @ArrayNotEmpty()
   @ValidateNested({ each: true })
-  @Type(() => ProductDto)
-  readonly products: ProductDto[];
+  @Type(() => UpdateProductByIdInput)
+  readonly products: UpdateProductByIdInput[];
 }
 
 @Controller('products')
