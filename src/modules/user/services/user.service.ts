@@ -23,9 +23,9 @@ export class UserService {
       relations: ['products'],
     });
     if (!result) {
-      throw new NotFoundException(
-        `[UserService] findOne: User with id ${id} not found`,
-      );
+      const errorMessage = `User with id ${id} not found`;
+      console.error(`[UserService] findOne: ${errorMessage}`);
+      throw new NotFoundException(errorMessage);
     }
     return result;
   }
