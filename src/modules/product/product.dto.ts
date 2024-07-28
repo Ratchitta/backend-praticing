@@ -1,4 +1,6 @@
+import { Type } from 'class-transformer';
 import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
+import { UserDto } from '../user/user.dto';
 
 export class ProductDto {
   @IsNumber()
@@ -15,6 +17,9 @@ export class ProductDto {
 
   @IsNumber()
   stock: number;
+
+  @Type(() => UserDto)
+  user: UserDto;
 
   @IsDate()
   createdAt: Date;

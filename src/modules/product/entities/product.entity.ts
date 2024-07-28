@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/modules/user/entities/user.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Product {
@@ -16,6 +23,10 @@ export class Product {
 
   @Column()
   stock: number;
+
+  @ManyToOne(() => User, (user) => user.products)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column({ name: 'created_at' })
   createdAt: Date;
