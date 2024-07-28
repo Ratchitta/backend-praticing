@@ -31,7 +31,7 @@ export class ProductService {
     private userService: UserService,
   ) {}
 
-  async findById(id: number): Promise<Product> {
+  async findProductById(id: number): Promise<Product> {
     const result = await this.productRepository.findOne({
       where: { id, deletedAt: IsNull() },
       relations: ['user'],
@@ -45,7 +45,7 @@ export class ProductService {
     return result;
   }
 
-  findAll(): Promise<Product[]> {
+  findAllProducts(): Promise<Product[]> {
     return this.productRepository.find({
       where: {
         deletedAt: IsNull(),
@@ -57,9 +57,9 @@ export class ProductService {
     });
   }
 
-  async create(product: ProductWithoutId): Promise<Product> {
+  async createProduct(product: ProductWithoutId): Promise<Product> {
     const { userId, ...restProps } = product;
-    const user = await this.userService.findById(userId);
+    const user = await this.userService.findUserById(userId);
 
     const dateNow = new Date();
     return await this.productRepository.save({
@@ -70,10 +70,13 @@ export class ProductService {
     });
   }
 
-  async update(id: number, product: ProductWithoutId): Promise<Product> {
+  async updateProductById(
+    id: number,
+    product: ProductWithoutId,
+  ): Promise<Product> {
     const { userId, ...remainingProps } = product;
 
-    const oldProduct = await this.findById(id);
+    const oldProduct = await this.findProductById(id);
     let newProduct: Product = { ...oldProduct, ...remainingProps };
 
     if (oldProduct.deletedAt) {
@@ -83,7 +86,7 @@ export class ProductService {
     }
 
     if (oldProduct.user.id !== userId) {
-      const user = await this.userService.findById(userId);
+      const user = await this.userService.findUserById(userId);
 
       newProduct = {
         ...newProduct,
@@ -96,11 +99,11 @@ export class ProductService {
       updatedAt: new Date(),
     });
 
-    return await this.findById(id);
+    return await this.findProductById(id);
   }
 
-  async remove(id: string): Promise<void> {
-    const product = await this.findById(Number(id));
+  async softDeleteProductById(id: string): Promise<void> {
+    const product = await this.findProductById(Number(id));
 
     if (product.deletedAt) {
       const errorMessage = `Product with id ${id} not found`;

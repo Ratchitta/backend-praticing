@@ -44,24 +44,24 @@ export class UserController {
   @Get()
   @ResponseMessage('Get all users successfully')
   findAll(): Promise<UserDto[]> {
-    return this.userService.findAll();
+    return this.userService.findAllUsers();
   }
 
   @Get(':id')
   @ResponseMessage('Get user by id successfully')
   findOne(@Param('id') id: number): Promise<UserDto> {
-    return this.userService.findById(id);
+    return this.userService.findUserById(id);
   }
 
   @Post()
   @ResponseMessage('Create user successfully')
   create(@Body() user: CreateUserDto): Promise<UserDto> {
-    return this.userService.create(user);
+    return this.userService.createUser(user);
   }
 
   @Delete(':id')
   @ResponseMessage('Delete user by id successfully')
   remove(@Param('id') id: number): Promise<void> {
-    return this.userService.remove(id);
+    return this.userService.softDeleteUser(id);
   }
 }

@@ -91,13 +91,13 @@ export class ProductController {
   @Get()
   @ResponseMessage('Get all products successfully')
   findAll(): Promise<ProductDto[]> {
-    return this.productService.findAll();
+    return this.productService.findAllProducts();
   }
 
   @Get(':id')
   @ResponseMessage('Get product by id successfully')
   findOne(@Param('id') id: number): Promise<ProductDto> {
-    return this.productService.findById(id);
+    return this.productService.findProductById(id);
   }
 
   @Post()
@@ -109,7 +109,7 @@ export class ProductController {
     const { products } = input;
 
     const results = products.map(async (product) => {
-      return await this.productService.create(product);
+      return await this.productService.createProduct(product);
     });
 
     return Promise.all(results);
@@ -121,7 +121,7 @@ export class ProductController {
     @Param('id') id: number,
     @Body() product: UpdateProductByIdInput,
   ): Promise<ProductDto> {
-    return this.productService.update(id, product);
+    return this.productService.updateProductById(id, product);
   }
 
   @Patch()
@@ -130,7 +130,7 @@ export class ProductController {
     const { products } = input;
 
     const results = products.map(async ({ id, ...product }) => {
-      return await this.productService.update(id, product);
+      return await this.productService.updateProductById(id, product);
     });
 
     return Promise.all(results);
@@ -139,6 +139,6 @@ export class ProductController {
   @Delete(':id')
   @ResponseMessage('Delete product by id successfully')
   remove(@Param('id') id: string): Promise<void> {
-    return this.productService.remove(id);
+    return this.productService.softDeleteProductById(id);
   }
 }

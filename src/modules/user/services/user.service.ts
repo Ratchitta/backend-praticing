@@ -17,7 +17,7 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findById(id: number): Promise<User> {
+  async findUserById(id: number): Promise<User> {
     const result = await this.userRepository.findOne({
       where: { id, deletedAt: IsNull() },
       relations: ['products'],
@@ -30,7 +30,7 @@ export class UserService {
     return result;
   }
 
-  findAll(): Promise<User[]> {
+  findAllUsers(): Promise<User[]> {
     return this.userRepository.find({
       where: {
         deletedAt: IsNull(),
@@ -42,7 +42,7 @@ export class UserService {
     });
   }
 
-  async create(user: UserWithoutId): Promise<User> {
+  async createUser(user: UserWithoutId): Promise<User> {
     const dateNow = new Date();
     return await this.userRepository.save({
       ...user,
@@ -51,8 +51,8 @@ export class UserService {
     });
   }
 
-  async remove(id: number): Promise<void> {
-    const user = await this.findById(id);
+  async softDeleteUser(id: number): Promise<void> {
+    const user = await this.findUserById(id);
     await this.userRepository.update(id, {
       ...user,
       deletedAt: new Date(),
