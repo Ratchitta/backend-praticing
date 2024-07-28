@@ -1,4 +1,13 @@
-import { IsEmail, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsDate,
+  IsEmail,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
+import { ProductDto } from '../product/product.dto';
 
 export class UserDto {
   @IsNumber()
@@ -20,13 +29,16 @@ export class UserDto {
   @IsString()
   phoneNumber: string;
 
-  @IsString()
+  @Type(() => ProductDto)
+  products: ProductDto[];
+
+  @IsDate()
   createdAt: Date;
 
-  @IsString()
+  @IsDate()
   updatedAt: Date;
 
   @IsOptional()
-  @IsString()
+  @IsDate()
   deletedAt: Date | null;
 }
