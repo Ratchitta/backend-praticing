@@ -20,8 +20,8 @@ import {
 } from 'class-validator';
 import { ResponseMessage } from 'src/common/decorators/response_message.decorator';
 import { TransformInterceptor } from 'src/common/interceptors/response.interceptor';
-import { ProductDto } from '../product.dto';
-import { ProductService } from '../services/product.service';
+import { ProductDto } from './product.dto';
+import { ProductService } from './product.service';
 
 class CreateProductDto {
   @IsNotEmpty()

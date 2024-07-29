@@ -7,10 +7,10 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
-import { UserService } from '../services/user.service';
+import { UserService } from './user.service';
 import { TransformInterceptor } from 'src/common/interceptors/response.interceptor';
 import { ResponseMessage } from 'src/common/decorators/response_message.decorator';
-import { UserDto } from '../user.dto';
+import { UserDto } from './user.dto';
 import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
 
 class CreateUserDto {
