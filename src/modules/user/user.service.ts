@@ -30,6 +30,19 @@ export class UserService {
     return result;
   }
 
+  async findUserByEmail(email: string): Promise<User> {
+    const result = await this.userRepository.findOne({
+      where: { email, deletedAt: IsNull() },
+    });
+    if (!result) {
+      const errorMessage = `User with email ${email} not found`;
+      console.error(`[UserService] findOne: ${errorMessage}`);
+      throw new NotFoundException(errorMessage);
+    }
+
+    return result;
+  }
+
   findAllUsers(): Promise<User[]> {
     return this.userRepository.find({
       where: {
