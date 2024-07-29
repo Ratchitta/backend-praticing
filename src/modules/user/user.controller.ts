@@ -18,6 +18,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
+import { Public } from 'src/common/decorators/public';
 
 class CreateUserDto {
   @IsString()
@@ -64,6 +65,7 @@ export class UserController {
     return this.userService.findUserById(id);
   }
 
+  @Public()
   @Post()
   @ResponseMessage('Create user successfully')
   create(@Body() user: CreateUserDto): Promise<UserDto> {
