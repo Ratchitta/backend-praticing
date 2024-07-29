@@ -11,7 +11,13 @@ import { UserService } from './user.service';
 import { TransformInterceptor } from 'src/common/interceptors/response.interceptor';
 import { ResponseMessage } from 'src/common/decorators/response_message.decorator';
 import { UserDto } from './user.dto';
-import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 class CreateUserDto {
   @IsString()
@@ -21,6 +27,11 @@ class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   readonly email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  readonly password: string;
 
   @IsNumber()
   @Min(0)
