@@ -1,4 +1,4 @@
-import { Product } from 'src/modules/product/entities/product.entity';
+import { Product } from 'src/common/entities/product.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -11,6 +11,9 @@ export class User {
 
   @Column()
   email: string;
+
+  @Column()
+  password: string;
 
   @Column()
   age: number;

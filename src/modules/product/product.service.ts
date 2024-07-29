@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNumber, IsString, Min } from 'class-validator';
 import { IsNull, Repository } from 'typeorm';
-import { Product } from '../entities/product.entity';
-import { UserService } from 'src/modules/user/services/user.service';
+import { Product } from 'src/common/entities/product.entity';
+import { UserService } from '../user/user.service';
 
 class ProductWithoutId {
   @IsString()
