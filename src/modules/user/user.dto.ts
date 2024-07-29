@@ -19,6 +19,9 @@ export class UserDto {
   @IsEmail()
   email: string;
 
+  @IsString()
+  password: string;
+
   @IsNumber()
   @Min(0)
   age: number;
