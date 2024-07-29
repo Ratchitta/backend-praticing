@@ -6,6 +6,7 @@ import { UserModule } from './modules/user/user.module';
 import { User } from './common/entities/user.entity';
 import { Product } from './common/entities/product.entity';
 import { ProductModule } from './modules/product/product.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ProductModule } from './modules/product/product.module';
     HelloModule,
     UserModule,
     ProductModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
