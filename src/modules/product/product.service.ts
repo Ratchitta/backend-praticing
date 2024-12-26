@@ -34,7 +34,6 @@ export class ProductService {
   async findProductById(id: string): Promise<Product> {
     const result = await this.productRepository.findOne({
       where: { id, deletedAt: IsNull() },
-      relations: ['user'],
     });
 
     if (!result) {
@@ -53,7 +52,6 @@ export class ProductService {
       order: {
         createdAt: 'ASC',
       },
-      relations: ['user'],
     });
   }
 

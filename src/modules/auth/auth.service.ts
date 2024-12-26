@@ -1,6 +1,10 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
+
+const jwtServiceOptions: JwtSignOptions = {
+  expiresIn: '1d',
+};
 
 @Injectable()
 export class AuthService {
@@ -18,7 +22,7 @@ export class AuthService {
 
     const payload = { email: user.email, sub: user.id };
     return {
-      access_token: await this.jwtSevice.signAsync(payload),
+      access_token: await this.jwtSevice.signAsync(payload, jwtServiceOptions),
     };
   }
 }
