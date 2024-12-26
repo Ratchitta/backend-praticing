@@ -6,6 +6,7 @@ import {
   InputType,
   Field,
   ObjectType,
+  Int,
 } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { ProductDto } from '../product/product.dto';
@@ -24,7 +25,7 @@ class User {
   @Field()
   password: string;
 
-  @Field()
+  @Field(() => Int)
   age: number;
 
   @Field()
@@ -54,7 +55,7 @@ class CreateUserDto {
   @Field()
   readonly password: string;
 
-  @Field()
+  @Field(() => Int)
   readonly age: number;
 
   @Field()

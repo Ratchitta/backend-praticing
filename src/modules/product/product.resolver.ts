@@ -1,4 +1,4 @@
-import { Field, ObjectType, Resolver } from '@nestjs/graphql';
+import { Field, Int, ObjectType, Resolver } from '@nestjs/graphql';
 
 @ObjectType()
 export class Product {
@@ -11,10 +11,10 @@ export class Product {
   @Field()
   description: string;
 
-  @Field()
+  @Field(() => Int)
   price: number;
 
-  @Field()
+  @Field(() => Int)
   stock: number;
 
   @Field()
@@ -26,7 +26,7 @@ export class Product {
   @Field()
   updatedAt: Date;
 
-  @Field()
+  @Field({ nullable: true })
   deletedAt: Date | null;
 }
 

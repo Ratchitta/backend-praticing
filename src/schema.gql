@@ -7,7 +7,7 @@ type User {
   name: String!
   email: String!
   password: String!
-  age: Float!
+  age: Int!
   address: String!
   phoneNumber: String!
   createdAt: DateTime!
@@ -33,7 +33,7 @@ input CreateUserDto {
   name: String!
   email: String!
   password: String!
-  age: Float!
+  age: Int!
   address: String!
   phoneNumber: String!
 }
