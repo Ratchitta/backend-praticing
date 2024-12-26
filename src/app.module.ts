@@ -9,6 +9,14 @@ import { ProductModule } from './modules/product/product.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './modules/auth/auth.guard';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'node:path';
+
+const apolloDriverConfig: ApolloDriverConfig = {
+  driver: ApolloDriver,
+  autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+};
 
 @Module({
   imports: [
@@ -22,6 +30,7 @@ import { AuthGuard } from './modules/auth/auth.guard';
       entities: [User, Product],
       synchronize: true,
     }),
+    GraphQLModule.forRoot(apolloDriverConfig),
     HelloModule,
     UserModule,
     ProductModule,

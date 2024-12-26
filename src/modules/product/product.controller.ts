@@ -22,6 +22,8 @@ import { ResponseMessage } from 'src/common/decorators/response_message.decorato
 import { TransformInterceptor } from 'src/common/interceptors/response.interceptor';
 import { ProductDto } from './product.dto';
 import { ProductService } from './product.service';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { UserDto } from '../user/user.dto';
 
 class CreateProductDto {
   @IsNotEmpty()
@@ -40,10 +42,6 @@ class CreateProductDto {
   @IsNumber()
   @Min(0)
   readonly stock: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  readonly userId: number;
 }
 
 class CreateProductsInput {
@@ -56,7 +54,7 @@ class CreateProductsInput {
 
 class UpdateProductByIdInput {
   @IsNumber()
-  readonly id: number;
+  readonly id: string;
 
   @IsString()
   readonly name: string;
@@ -70,9 +68,6 @@ class UpdateProductByIdInput {
   @IsNumber()
   @Min(0)
   readonly stock: number;
-
-  @IsNumber()
-  readonly userId: number;
 }
 
 class UpdateProductsInput {
@@ -96,7 +91,7 @@ export class ProductController {
 
   @Get(':id')
   @ResponseMessage('Get product by id successfully')
-  findOne(@Param('id') id: number): Promise<ProductDto> {
+  findOne(@Param('id') id: string): Promise<ProductDto> {
     return this.productService.findProductById(id);
   }
 
@@ -105,11 +100,15 @@ export class ProductController {
   create(
     @Body()
     input: CreateProductsInput,
+    @CurrentUser() user: UserDto,
   ): Promise<ProductDto[]> {
     const { products } = input;
 
     const results = products.map(async (product) => {
-      return await this.productService.createProduct(product);
+      return await this.productService.createProduct({
+        ...product,
+        createdBy: user.id,
+      });
     });
 
     return Promise.all(results);
@@ -118,19 +117,29 @@ export class ProductController {
   @Patch(':id')
   @ResponseMessage('Update product by id successfully')
   update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() product: UpdateProductByIdInput,
+    @CurrentUser() user: UserDto,
   ): Promise<ProductDto> {
-    return this.productService.updateProductById(id, product);
+    return this.productService.updateProductById(id, {
+      ...product,
+      createdBy: user.id,
+    });
   }
 
   @Patch()
   @ResponseMessage('Update products successfully')
-  updateAll(@Body() input: UpdateProductsInput): Promise<ProductDto[]> {
+  updateAll(
+    @Body() input: UpdateProductsInput,
+    @CurrentUser() user: UserDto,
+  ): Promise<ProductDto[]> {
     const { products } = input;
 
     const results = products.map(async ({ id, ...product }) => {
-      return await this.productService.updateProductById(id, product);
+      return await this.productService.updateProductById(id, {
+        ...product,
+        createdBy: user.id,
+      });
     });
 
     return Promise.all(results);

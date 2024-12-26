@@ -19,8 +19,8 @@ class ProductWithoutId {
   @Min(0)
   readonly stock: number;
 
-  @IsNumber()
-  readonly userId: number;
+  @IsString()
+  readonly createdBy: string;
 }
 
 @Injectable()
@@ -31,7 +31,7 @@ export class ProductService {
     private userService: UserService,
   ) {}
 
-  async findProductById(id: number): Promise<Product> {
+  async findProductById(id: string): Promise<Product> {
     const result = await this.productRepository.findOne({
       where: { id, deletedAt: IsNull() },
       relations: ['user'],
@@ -58,23 +58,23 @@ export class ProductService {
   }
 
   async createProduct(product: ProductWithoutId): Promise<Product> {
-    const { userId, ...restProps } = product;
-    const user = await this.userService.findUserById(userId);
+    const { createdBy, ...restProps } = product;
+    const user = await this.userService.findUserById(createdBy);
 
     const dateNow = new Date();
     return await this.productRepository.save({
       ...restProps,
-      user,
+      createdBy: user.id,
       createdAt: dateNow,
       updatedAt: dateNow,
     });
   }
 
   async updateProductById(
-    id: number,
+    id: string,
     product: ProductWithoutId,
   ): Promise<Product> {
-    const { userId, ...remainingProps } = product;
+    const { createdBy, ...remainingProps } = product;
 
     const oldProduct = await this.findProductById(id);
     let newProduct: Product = { ...oldProduct, ...remainingProps };
@@ -85,12 +85,12 @@ export class ProductService {
       throw new NotFoundException(errorMessage);
     }
 
-    if (oldProduct.user.id !== userId) {
-      const user = await this.userService.findUserById(userId);
+    if (oldProduct.createdBy !== createdBy) {
+      const user = await this.userService.findUserById(createdBy);
 
       newProduct = {
         ...newProduct,
-        user,
+        createdBy: user.id,
       };
     }
 
@@ -103,7 +103,7 @@ export class ProductService {
   }
 
   async softDeleteProductById(id: string): Promise<void> {
-    const product = await this.findProductById(Number(id));
+    const product = await this.findProductById(id);
 
     if (product.deletedAt) {
       const errorMessage = `Product with id ${id} not found`;

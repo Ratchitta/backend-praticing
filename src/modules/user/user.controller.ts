@@ -61,7 +61,7 @@ export class UserController {
 
   @Get(':id')
   @ResponseMessage('Get user by id successfully')
-  findOne(@Param('id') id: number): Promise<UserDto> {
+  findOne(@Param('id') id: string): Promise<UserDto> {
     return this.userService.findUserById(id);
   }
 
@@ -74,7 +74,7 @@ export class UserController {
 
   @Delete(':id')
   @ResponseMessage('Delete user by id successfully')
-  remove(@Param('id') id: number): Promise<void> {
+  remove(@Param('id') id: string): Promise<void> {
     return this.userService.softDeleteUser(id);
   }
 }
