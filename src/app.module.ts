@@ -16,6 +16,8 @@ import { join } from 'node:path';
 const apolloDriverConfig: ApolloDriverConfig = {
   driver: ApolloDriver,
   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+  playground: true,
+  introspection: true,
 };
 
 @Module({
