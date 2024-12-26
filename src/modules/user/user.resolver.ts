@@ -1,15 +1,14 @@
 import {
-  Resolver,
-  Query,
-  Mutation,
   Args,
-  InputType,
   Field,
-  ObjectType,
+  InputType,
   Int,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
 } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { ProductDto } from '../product/product.dto';
 
 @ObjectType()
 class User {
@@ -69,13 +68,13 @@ class CreateUserDto {
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Query(() => [User], { name: 'findAllUsers' })
-  async users() {
+  @Query(() => [User])
+  async findAllUsers() {
     return this.userService.findAllUsers();
   }
 
-  @Query(() => User, { name: 'findUserById' })
-  async user(@Args('id') id: string) {
+  @Query(() => User)
+  async findUserById(@Args('id') id: string) {
     return this.userService.findUserById(id);
   }
 

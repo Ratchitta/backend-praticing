@@ -147,7 +147,7 @@ export class ProductController {
 
   @Delete(':id')
   @ResponseMessage('Delete product by id successfully')
-  remove(@Param('id') id: string): Promise<void> {
+  remove(@Param('id') id: string): Promise<ProductDto> {
     return this.productService.softDeleteProductById(id);
   }
 }

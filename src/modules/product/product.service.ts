@@ -102,7 +102,7 @@ export class ProductService {
     return await this.findProductById(id);
   }
 
-  async softDeleteProductById(id: string): Promise<void> {
+  async softDeleteProductById(id: string): Promise<Product> {
     const product = await this.findProductById(id);
 
     if (product.deletedAt) {
@@ -115,5 +115,7 @@ export class ProductService {
       ...product,
       deletedAt: new Date(),
     });
+
+    return await this.findProductById(id);
   }
 }
