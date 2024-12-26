@@ -17,10 +17,9 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findUserById(id: number): Promise<User> {
+  async findUserById(id: string): Promise<User> {
     const result = await this.userRepository.findOne({
       where: { id, deletedAt: IsNull() },
-      relations: ['products'],
     });
     if (!result) {
       const errorMessage = `User with id ${id} not found`;
@@ -51,7 +50,6 @@ export class UserService {
       order: {
         createdAt: 'ASC',
       },
-      relations: ['products'],
     });
   }
 
@@ -64,7 +62,7 @@ export class UserService {
     });
   }
 
-  async softDeleteUser(id: number): Promise<void> {
+  async softDeleteUser(id: string): Promise<void> {
     const user = await this.findUserById(id);
     await this.userRepository.update(id, {
       ...user,

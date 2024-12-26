@@ -1,10 +1,9 @@
-import { Product } from 'src/common/entities/product.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -23,9 +22,6 @@ export class User {
 
   @Column()
   phoneNumber: string;
-
-  @OneToMany(() => Product, (product) => product.user)
-  products: Product[];
 
   @Column({ name: 'created_at' })
   createdAt: Date;

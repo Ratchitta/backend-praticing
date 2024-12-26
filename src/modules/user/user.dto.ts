@@ -10,8 +10,8 @@ import {
 import { ProductDto } from '../product/product.dto';
 
 export class UserDto {
-  @IsNumber()
-  id: number;
+  @IsString()
+  id: string;
 
   @IsString()
   name: string;
@@ -31,9 +31,6 @@ export class UserDto {
 
   @IsString()
   phoneNumber: string;
-
-  @Type(() => ProductDto)
-  products: ProductDto[];
 
   @IsDate()
   createdAt: Date;

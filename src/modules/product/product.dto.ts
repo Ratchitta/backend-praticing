@@ -1,10 +1,8 @@
-import { Type } from 'class-transformer';
 import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
-import { UserDto } from '../user/user.dto';
 
 export class ProductDto {
-  @IsNumber()
-  id: number;
+  @IsString()
+  id: string;
 
   @IsString()
   name: string;
@@ -18,8 +16,8 @@ export class ProductDto {
   @IsNumber()
   stock: number;
 
-  @Type(() => UserDto)
-  user: UserDto;
+  @IsString()
+  createdBy: string;
 
   @IsDate()
   createdAt: Date;
