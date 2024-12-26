@@ -1,6 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { IsNotEmpty, IsString } from 'class-validator';
+import { Response } from 'express';
 import { Public } from 'src/common/decorators/public';
 
 class LoginInput {
@@ -22,8 +23,10 @@ export class AuthController {
   login(
     @Body()
     input: LoginInput,
+    @Res()
+    res: Response,
   ) {
     const { email, password } = input;
-    return this.authService.login(email, password);
+    return this.authService.login(email, password, res);
   }
 }
