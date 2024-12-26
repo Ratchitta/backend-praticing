@@ -11,7 +11,7 @@ import {
 import { UserService } from './user.service';
 
 @ObjectType()
-class User {
+export class User {
   @Field()
   id: string;
 

@@ -5,12 +5,16 @@ import {
   Int,
   Mutation,
   ObjectType,
+  Parent,
   Query,
+  ResolveField,
   Resolver,
 } from '@nestjs/graphql';
 import { ProductService } from './product.service';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { UserDto } from '../user/user.dto';
+import { UserService } from '../user/user.service';
+import { User } from '../user/user.resolver';
 
 @ObjectType()
 export class Product {
@@ -59,7 +63,10 @@ export class ProductWithoutId {
 
 @Resolver(() => Product)
 export class ProductResolver {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly userService: UserService,
+  ) {}
 
   @Query(() => [Product])
   async findAllProducts(): Promise<Product[]> {
@@ -97,5 +104,10 @@ export class ProductResolver {
   @Mutation(() => Product)
   async deleteProduct(@Args('id') id: string): Promise<Product> {
     return this.productService.softDeleteProductById(id);
+  }
+
+  @ResolveField(() => User)
+  async owner(@Parent() product: Product): Promise<User> {
+    return this.userService.findUserById(product.createdBy);
   }
 }

@@ -30,6 +30,7 @@ type Product {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
+  owner: User!
 }
 
 type Query {
