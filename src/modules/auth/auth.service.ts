@@ -26,5 +26,7 @@ export class AuthService {
     });
 
     res.status(200).send({ message: 'Login successful' });
+
+    return token;
   }
 }
