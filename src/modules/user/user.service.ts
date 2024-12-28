@@ -6,8 +6,10 @@ import { User } from 'src/common/entities/user.entity';
 class UserWithoutId {
   readonly name: string;
   readonly email: string;
+  readonly password: string;
   readonly age: number;
   readonly address: string;
+  readonly phoneNumber: string;
 }
 
 @Injectable()

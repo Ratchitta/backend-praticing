@@ -4,19 +4,28 @@ import * as dotenv from 'dotenv';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './jwt.strategy';
+import { AuthResolver } from './auth.resolver';
 
 dotenv.config();
 
 @Module({
   imports: [
     UserModule,
-    JwtModule.register({
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    JwtModule.registerAsync({
       global: true,
-      secret: process.env.JWT_SECRET || '',
-      signOptions: { expiresIn: '60s' },
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy, AuthResolver],
 })
 export class AuthModule {}

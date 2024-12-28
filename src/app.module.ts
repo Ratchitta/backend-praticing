@@ -1,19 +1,20 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HelloModule } from './modules/hello/hello.module';
 import { UserModule } from './modules/user/user.module';
 
-import { User } from './common/entities/user.entity';
-import { Product } from './common/entities/product.entity';
-import { ProductModule } from './modules/product/product.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './modules/auth/auth.guard';
-import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'node:path';
-import { verify } from 'jsonwebtoken';
+import { APP_GUARD } from '@nestjs/core';
+import { GraphQLModule } from '@nestjs/graphql';
 import { JsonWebTokenError } from '@nestjs/jwt';
+import * as cookieParser from 'cookie-parser';
+import { verify } from 'jsonwebtoken';
+import { join } from 'node:path';
+import { Product } from './common/entities/product.entity';
+import { User } from './common/entities/user.entity';
+import { AuthGuard } from './modules/auth/auth.guard';
+import { AuthModule } from './modules/auth/auth.module';
+import { ProductModule } from './modules/product/product.module';
 
 const apolloDriverConfig: ApolloDriverConfig = {
   driver: ApolloDriver,
@@ -78,4 +79,8 @@ const apolloDriverConfig: ApolloDriverConfig = {
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(cookieParser()).forRoutes('*');
+  }
+}

@@ -9,6 +9,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { UserService } from './user.service';
+import { Public } from 'src/common/decorators/public';
 
 @ObjectType()
 export class User {
@@ -24,13 +25,13 @@ export class User {
   @Field()
   password: string;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   age: number;
 
-  @Field()
+  @Field({ nullable: true })
   address: string;
 
-  @Field()
+  @Field({ nullable: true })
   phoneNumber: string;
 
   @Field()
@@ -44,7 +45,7 @@ export class User {
 }
 
 @InputType()
-class CreateUserDto {
+class RegisterInput {
   @Field()
   readonly name: string;
 
@@ -54,13 +55,13 @@ class CreateUserDto {
   @Field()
   readonly password: string;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   readonly age: number;
 
-  @Field()
+  @Field({ nullable: true })
   readonly address: string;
 
-  @Field()
+  @Field({ nullable: true })
   readonly phoneNumber: string;
 }
 
@@ -78,8 +79,9 @@ export class UserResolver {
     return this.userService.findUserById(id);
   }
 
+  @Public()
   @Mutation(() => User)
-  async createUser(@Args('input') input: CreateUserDto) {
+  async register(@Args('input') input: RegisterInput) {
     return this.userService.createUser(input);
   }
 }
