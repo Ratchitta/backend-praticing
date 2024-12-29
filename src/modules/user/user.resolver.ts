@@ -8,8 +8,8 @@ import {
   Query,
   Resolver,
 } from '@nestjs/graphql';
-import { UserService } from './user.service';
 import { Public } from 'src/common/decorators/public';
+import { UserService } from './user.service';
 
 @ObjectType()
 export class User {

@@ -1,7 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { User } from 'src/common/entities/user.entity';
+
+export enum RegisterErrorMessages {
+  EMAIL_ALREADY_EXISTS = 'EMAIL_ALREADY_EXISTS',
+  WEAK_PASSWORD = 'WEAK_PASSWORD',
+}
 
 class UserWithoutId {
   readonly name: string;
@@ -57,6 +66,22 @@ export class UserService {
 
   async createUser(user: UserWithoutId): Promise<User> {
     const dateNow = new Date();
+
+    if (user.password.length < 8) {
+      const errorMessage = "Password can't be less than 8 characters";
+      console.error(`[UserService] createUser: ${errorMessage}`);
+      throw new BadRequestException(RegisterErrorMessages.WEAK_PASSWORD);
+    }
+
+    const userWithSameEmail = await this.userRepository.findOne({
+      where: { email: user.email, deletedAt: IsNull() },
+    });
+    if (userWithSameEmail) {
+      const errorMessage = `Email ${user.email} already exists`;
+      console.error(`[UserService] createUser: ${errorMessage}`);
+      throw new BadRequestException(RegisterErrorMessages.EMAIL_ALREADY_EXISTS);
+    }
+
     return await this.userRepository.save({
       ...user,
       createdAt: dateNow,
