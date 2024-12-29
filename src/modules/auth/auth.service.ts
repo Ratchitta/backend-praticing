@@ -17,15 +17,15 @@ export class AuthService {
       throw new ForbiddenException('Invalid email or password');
     }
 
-    const payload = { email: user.email, sub: user.id };
+    const payload = { id: user.id };
     const token = await this.jwtService.signAsync(payload);
 
-    res.cookie('token', token, {
+    res?.cookie('token', token, {
       httpOnly: true,
-      secure: true,
+      // secure: process.env.NODE_ENV === 'production', // Enable this option in production
     });
 
-    res.status(200).send({ message: 'Login successful' });
+    // res.status(200).send({ message: 'Login successful' });
 
     return token;
   }

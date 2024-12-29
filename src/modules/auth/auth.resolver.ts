@@ -8,6 +8,7 @@ import {
 } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
+import { Public } from 'src/common/decorators/public';
 
 @ObjectType()
 class AuthResponse {
@@ -19,6 +20,7 @@ class AuthResponse {
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Mutation(() => AuthResponse)
   async login(
     @Args('email') email: string,

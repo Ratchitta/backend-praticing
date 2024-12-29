@@ -19,34 +19,31 @@ import { ProductModule } from './modules/product/product.module';
 const apolloDriverConfig: ApolloDriverConfig = {
   driver: ApolloDriver,
   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-  context: async ({ req, connection, ...rest }) => {
+  context: async ({ req, connection, res, ...rest }) => {
     if (connection) {
       // check connection for metadata
       return connection.context;
     } else {
       // check from req
-      const authHeader = req.headers.authorization;
-      if (authHeader) {
-        const token = authHeader.split(' ')[1];
-        if (token && token !== 'null') {
-          try {
-            // validate user in client
-            const currentUser = verify(token, process.env.JWT_SECRET);
-            // add user to request
-            return {
-              req: {
-                ...req,
-                headers: req.headers,
-                user: currentUser,
-              },
-              ...rest,
-            };
-          } catch (err: string | any) {
-            throw new JsonWebTokenError(err);
-          }
+      const token = req?.cookies?.token;
+      if (token && token !== 'null') {
+        try {
+          // validate user in client
+          const currentUser = verify(token, process.env.JWT_SECRET);
+          // add user to request
+          return {
+            req: {
+              ...req,
+              headers: req.headers,
+              user: currentUser,
+            },
+            ...rest,
+          };
+        } catch (err: string | any) {
+          throw new JsonWebTokenError(err);
         }
       }
-      return { req };
+      return { req, res, ...rest };
     }
   },
   playground: true,

@@ -6,7 +6,6 @@ type User {
   id: String!
   name: String!
   email: String!
-  password: String!
   age: Int
   address: String
   phoneNumber: String
@@ -40,6 +39,7 @@ type Product {
 type Query {
   findAllUsers: [User!]!
   findUserById(id: String!): User!
+  getMyProfile: User
   findAllProducts: [Product!]!
   findProductById: Product!
 }

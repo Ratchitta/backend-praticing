@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Field,
   InputType,
   Int,
@@ -10,6 +11,7 @@ import {
 } from '@nestjs/graphql';
 import { Public } from 'src/common/decorators/public';
 import { UserService } from './user.service';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 
 @ObjectType()
 export class User {
@@ -21,9 +23,6 @@ export class User {
 
   @Field()
   email: string;
-
-  @Field()
-  password: string;
 
   @Field(() => Int, { nullable: true })
   age: number;
@@ -83,5 +82,14 @@ export class UserResolver {
   @Mutation(() => User)
   async register(@Args('input') input: RegisterInput) {
     return this.userService.createUser(input);
+  }
+
+  @Public()
+  @Query(() => User, { nullable: true })
+  async getMyProfile(@CurrentUser() user: User) {
+    if (!user) {
+      return null;
+    }
+    return this.userService.findUserById(user.id);
   }
 }
