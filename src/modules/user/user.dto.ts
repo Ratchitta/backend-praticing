@@ -22,15 +22,18 @@ export class UserDto {
   @IsString()
   password: string;
 
+  @IsOptional()
   @IsNumber()
   @Min(0)
-  age: number;
+  age: number | null;
 
+  @IsOptional()
   @IsString()
-  address: string;
+  address: string | null;
 
+  @IsOptional()
   @IsString()
-  phoneNumber: string;
+  phoneNumber: string | null;
 
   @IsDate()
   createdAt: Date;
