@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { User } from 'src/common/entities/user.entity';
+import { hashPassword } from 'src/common/utils/encrypt';
 
 export enum RegisterErrorMessages {
   EMAIL_ALREADY_EXISTS = 'EMAIL_ALREADY_EXISTS',
@@ -82,8 +83,11 @@ export class UserService {
       throw new BadRequestException(RegisterErrorMessages.EMAIL_ALREADY_EXISTS);
     }
 
+    const hashedPassword = await hashPassword(user.password);
+
     return await this.userRepository.save({
       ...user,
+      password: hashedPassword,
       createdAt: dateNow,
       updatedAt: dateNow,
     });
