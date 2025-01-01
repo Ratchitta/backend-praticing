@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { Response } from 'express';
+import { comparePassword } from 'src/common/utils/encrypt';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
   async login(email: string, password: string, res: Response) {
     const user = await this.userService.findUserByEmail(email);
 
-    if (!user || user.password !== password) {
+    if (!user || !comparePassword(password, user.password)) {
       throw new ForbiddenException('Invalid email or password');
     }
 

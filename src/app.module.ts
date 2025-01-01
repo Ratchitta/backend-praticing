@@ -40,7 +40,11 @@ const apolloDriverConfig: ApolloDriverConfig = {
             ...rest,
           };
         } catch (err: string | any) {
-          throw new JsonWebTokenError(err);
+          if (err.name === 'TokenExpiredError') {
+            console.warn('Token expired:', err.message);
+          } else {
+            console.error('Token verification error:', err.message);
+          }
         }
       }
       return { req, res, ...rest };
